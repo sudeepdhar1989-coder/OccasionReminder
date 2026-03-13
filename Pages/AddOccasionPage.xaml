@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="OccasionReminder.Pages.AddOccasionPage"
+             Title="Add Occasion">
+
+    <ScrollView>
+
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="Add Occasion"
+                   FontSize="28"
+                   HorizontalOptions="Center"/>
+
+            <Entry
+                x:Name="titleEntry"
+                Placeholder="Occasion Name"/>
+
+            <Picker
+                x:Name="typePicker"
+                Title="Select Type">
+
+                <Picker.Items>
+                    <x:String>Birthday</x:String>
+                    <x:String>Anniversary</x:String>
+                    <x:String>Other</x:String>
+                </Picker.Items>
+
+            </Picker>
+
+            <DatePicker
+                x:Name="datePicker"/>
+
+            <Button
+                Text="Save Occasion"
+                Clicked="SaveClicked"/>
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>
