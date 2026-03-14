@@ -9,29 +9,37 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+
+    - uses: actions/checkout@v4
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: 9.0.303
 
-    - name: Install MAUI Workloads
+    - name: Show SDK
+      run: dotnet --info
+
+    - name: Install MAUI
       run: |
-        dotnet nuget locals all --clear
         dotnet workload install maui-ios
         dotnet workload restore
 
-    - name: Restore Dependencies
+    - name: Restore
       run: dotnet restore
 
-    - name: Build iOS App
+    - name: Build iOS
       run: dotnet build OccasionReminder.csproj -f net9.0-ios -c Release
 
-    - name: Upload Build Output
-      uses: actions/upload-artifact@v4
+    - name: Publish IPA
+      run: |
+        dotnet publish OccasionReminder.csproj \
+        -f net9.0-ios \
+        -c Release \
+        -p:ArchiveOnBuild=true \
+        -p:RuntimeIdentifier=ios-arm64
+
+    - uses: actions/upload-artifact@v4
       with:
-        name: ios-build
-        path: |
-          **/bin/Release/net9.0-ios/
+        name: ios-app
+        path: '**/*.ipa'
