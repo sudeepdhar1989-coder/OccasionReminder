@@ -6,46 +6,28 @@ on:
 
 jobs:
   build:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
+    - uses: actions/checkout@v4
 
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Select Xcode
-      run: sudo xcode-select -s /Applications/Xcode_16.4.app
-
-    - name: Install .NET 9
+    - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.303
+        dotnet-version: 9.0.x
 
-    - name: Show installed SDK
-      run: dotnet --info
-
-    - name: Install MAUI workloads
+    - name: Install MAUI
       run: |
-        dotnet nuget locals all --clear
-        dotnet workload install maui --skip-manifest-update
-        dotnet workload restore
+        dotnet workload install maui
 
-    - name: Restore dependencies
+    - name: Restore
       run: dotnet restore
 
-    - name: Build iOS App
-      run: dotnet build OccasionReminder.csproj -c Release -f net9.0-ios
+    - name: Build iOS
+      run: dotnet publish OccasionReminder.csproj -c Release -f net9.0-ios -p:ArchiveOnBuild=true -p:RuntimeIdentifier=ios-arm64
 
-    - name: Publish iOS IPA
-      run: |
-        dotnet publish OccasionReminder.csproj \
-        -f net9.0-ios \
-        -c Release \
-        -p:ArchiveOnBuild=true \
-        -p:RuntimeIdentifier=ios-arm64
-
-    - name: Upload Artifact
+    - name: Upload IPA
       uses: actions/upload-artifact@v4
       with:
-        name: ios-ipa
+        name: ios-app
         path: '**/*.ipa'
