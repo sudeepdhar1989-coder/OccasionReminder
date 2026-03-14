@@ -12,6 +12,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
+    <!-- App Info -->
     <ApplicationTitle>OccasionReminder</ApplicationTitle>
     <ApplicationId>com.companyname.occasionreminder</ApplicationId>
 
@@ -21,14 +22,22 @@
     <WindowsPackageType>None</WindowsPackageType>
 
     <!-- Platform versions -->
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+      11.0
+    </SupportedOSPlatformVersion>
 
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+      21.0
+    </SupportedOSPlatformVersion>
 
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
+      15.0
+    </SupportedOSPlatformVersion>
 
   </PropertyGroup>
 
+
+  <!-- MAUI Resources -->
   <ItemGroup>
 
     <MauiIcon Include="Resources\AppIcon\appicon.svg"
@@ -52,6 +61,8 @@
 
   </ItemGroup>
 
+
+  <!-- NuGet Packages -->
   <ItemGroup>
 
     <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.120" />
@@ -62,8 +73,13 @@
 
     <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 
+    <!-- Fix AndroidX dependency conflict -->
+    <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData.Core" Version="2.9.2.1" />
+
   </ItemGroup>
 
+
+  <!-- XAML Pages -->
   <ItemGroup>
 
     <MauiXaml Update="Pages\AddOccasionPage.xaml">
