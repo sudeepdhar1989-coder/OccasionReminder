@@ -2,38 +2,48 @@ name: Build iOS IPA
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: macos-latest
+  build-ios:
+    runs-on: macos-14
 
     steps:
-    - uses: actions/checkout@v4
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 9.0.x
+
 
     - name: Install MAUI workloads
       run: |
         dotnet workload install maui
-        dotnet workload restore
+        dotnet workload install ios
 
-    - name: Restore
+
+    - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build iOS
+
+    - name: Build iOS app
       run: |
         dotnet publish OccasionReminder.csproj \
-        -f net8.0-ios \
+        -f net9.0-ios \
         -c Release \
-        -p:ArchiveOnBuild=true \
+        -p:BuildIpa=true \
         -p:RuntimeIdentifier=ios-arm64
+
 
     - name: Upload IPA
       uses: actions/upload-artifact@v4
       with:
-        name: ios-ipa
-        path: '**/*.ipa'
+        name: OccasionReminder-IPA
+        path: |
+          **/*.ipa
