@@ -1,4 +1,4 @@
-name: Build iOS App
+name: Build iOS IPA
 
 on:
   push:
@@ -14,20 +14,26 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: 8.0.x
 
-    - name: Install MAUI
+    - name: Install MAUI workloads
       run: |
         dotnet workload install maui
+        dotnet workload restore
 
     - name: Restore
       run: dotnet restore
 
     - name: Build iOS
-      run: dotnet publish OccasionReminder.csproj -c Release -f net9.0-ios -p:ArchiveOnBuild=true -p:RuntimeIdentifier=ios-arm64
+      run: |
+        dotnet publish OccasionReminder.csproj \
+        -f net8.0-ios \
+        -c Release \
+        -p:ArchiveOnBuild=true \
+        -p:RuntimeIdentifier=ios-arm64
 
     - name: Upload IPA
       uses: actions/upload-artifact@v4
       with:
-        name: ios-app
+        name: ios-ipa
         path: '**/*.ipa'
