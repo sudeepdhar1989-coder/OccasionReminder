@@ -1,15 +1,27 @@
-name: Build iOS
-on: [push]
+name: Build iOS App
+on:
+  push:
+    branches: [ main ]
 jobs:
   build:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-dotnet@v4
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-    - run: dotnet workload install maui
-    - run: dotnet workload restore
-    - run: dotnet restore
-    - run: dotnet build -c Release -f net8.0-ios
-    - uses: actions/upload-
+    - name: Install MAUI
+      run: |
+        dotnet workload install maui
+        dotnet workload restore
+    - name: Restore
+      run: dotnet restore
+    - name: Build iOS
+      run: dotnet build -c Release -f net8.0-ios
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: iOSApp
+        path: '**/bin/Release/net8.0-ios/*.ipa'
