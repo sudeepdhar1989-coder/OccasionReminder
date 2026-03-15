@@ -1,49 +1,42 @@
-name: Build iOS IPA
+name: Build Android APK
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  build-ios:
-    runs-on: macos-14
+  build-android:
+    runs-on: ubuntu-latest
 
     steps:
 
     - name: Checkout repository
       uses: actions/checkout@v4
 
-
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
-
+        dotnet-version: 8.0.x
 
     - name: Install MAUI workloads
       run: |
         dotnet workload install maui
-        dotnet workload install ios
-
+        dotnet workload install maui-android
 
     - name: Restore dependencies
       run: dotnet restore
 
-
-    - name: Build iOS app
+    - name: Build Android APK
       run: |
         dotnet publish OccasionReminder.csproj \
-        -f net9.0-ios \
+        -f net8.0-android \
         -c Release \
-        -p:BuildIpa=true \
-        -p:RuntimeIdentifier=ios-arm64
+        -p:AndroidPackageFormat=apk
 
-
-    - name: Upload IPA
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: OccasionReminder-IPA
+        name: OccasionReminder-APK
         path: |
-          **/*.ipa
+          **/*.apk
